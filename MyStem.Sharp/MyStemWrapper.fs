@@ -12,13 +12,15 @@ type Defention(gr,lex) =
 type WordDefention(text, analysis:list<Defention>) = 
     member this.text = text
     member this.analysis = analysis
-    member this.GetText() = 
+    member this.GetText() : string = 
         match this.analysis with
         | [] -> this.text
         | _ -> analysis.Head.lex
 
 type MyStemWrapper (path: string) = 
     
+    let lockObject = ref 4
+
     let createStartInfo path =
         let startInfo = new ProcessStartInfo()
         do
@@ -50,6 +52,6 @@ type MyStemWrapper (path: string) =
         array.ToObject<list<WordDefention>>()
                     
     member this.Lemmatize (text:string) : list<WordDefention> =
-        getProcessOutput text mystemProc reader
+        lock lockObject (fun () -> getProcessOutput text mystemProc reader)
             |> JArray.Parse
             |> cast
