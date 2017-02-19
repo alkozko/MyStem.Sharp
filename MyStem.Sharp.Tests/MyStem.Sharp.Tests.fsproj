@@ -51,7 +51,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Library1.fs" />
+    <Compile Include="WrapperTests.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +66,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <ProjectReference Include="..\src\MyStem.Sharp.fsproj">
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyStem.Sharp\MyStem.Sharp.fsproj">
       <Name>MyStem.Sharp</Name>
       <Project>{70301556-c581-410a-a6ea-b38f4d2adf25}</Project>
       <Private>True</Private>
