@@ -1,21 +1,10 @@
 ﻿module MyStem.Sharp.Wrapper
 
+open MyStem.Sharp.Dtos
 open System.Diagnostics
 open System.Text
 open System.IO
 open Newtonsoft.Json.Linq
-
-type Defention(gr,lex) =
-    member this.gr = gr
-    member this.lex = lex
-
-type WordDefention(text, analysis:list<Defention>) = 
-    member this.text = text
-    member this.analysis = analysis
-    member this.GetText() : string = 
-        match this.analysis with
-        | [] -> this.text
-        | _ -> analysis.Head.lex
 
 type MyStemWrapper (path: string) = 
     

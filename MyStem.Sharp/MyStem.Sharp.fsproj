@@ -51,6 +51,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Dtos.fs" />
     <Compile Include="MyStemWrapper.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
