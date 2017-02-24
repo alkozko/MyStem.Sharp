@@ -1,8 +1,9 @@
 ﻿namespace MyStem.Sharp.Tests
 
 open NUnit.Framework
-open MyStem.Sharp.Wrapper
+open MyStem.Sharp
 open System.Threading.Tasks
+open MyStem.Sharp.Wrapper
 
 [<TestFixture>]
 type Tests() = 
@@ -10,18 +11,18 @@ type Tests() =
 
     [<Test>]
     member  this.SimpleMyStemTest() =
-        let wrapper = new MyStemWrapper(myStemPath) 
+        let wrapper = new Lemmatizer(myStemPath) 
         let lemmas = wrapper.Lemmatize "Съешь ещё этих мягких булочек и выпей чаю"
         ()
     
     [<Test>]
     member  this.MultiThreadingTest() =
-        let wrapper = new MyStemWrapper(myStemPath) 
+        let wrapper = new Lemmatizer(myStemPath) 
         let t1 = Task.Run(fun () ->
             let lemmas = wrapper.Lemmatize @"Программа mystem производит морфологический анализ текста на русском языке. 
             Она умеет строить гипотетические разборы для слов, не входящих в словарь. 
             Первую версию программы написали Илья Сегалович и Виталий Титов."
-            Assert.AreEqual("программа",lemmas.Head.GetText())
+            Assert.AreEqual("программа",lemmas.[0].GetText())
             ()
         )
 
@@ -29,6 +30,6 @@ type Tests() =
         
         t1.Wait()
 
-        Assert.AreEqual("облако",lemmas.Head.GetText())
+        Assert.AreEqual("облако",lemmas.[0].GetText())
        
         ()

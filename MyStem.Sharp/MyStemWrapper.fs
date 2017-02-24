@@ -1,12 +1,23 @@
 ﻿module MyStem.Sharp.Wrapper
 
-open MyStem.Sharp.Dtos
 open System.Diagnostics
 open System.Text
 open System.IO
 open Newtonsoft.Json.Linq
 
-type MyStemWrapper (path: string) = 
+type Defention(gr:string,lex:string) =
+    member this.gr = gr
+    member this.lex = lex
+
+type WordDefention(text, analysis:Defention[]) = 
+    member this.text = text
+    member this.analysis = analysis
+    member this.GetText() : string = 
+        match this.analysis |> Array.length with
+        | 0 -> this.text
+        | _ -> analysis.[0].lex
+
+type Lemmatizer (path: string) = 
     
     let lockObject = ref 4
 
@@ -36,11 +47,13 @@ type MyStemWrapper (path: string) =
         proc.StandardInput.BaseStream.Write(buffer,0,buffer.Length)
         proc.StandardInput.BaseStream.Flush()
         reader.ReadLine()
-               
-    let cast(array:JArray) : list<WordDefention> =
-        array.ToObject<list<WordDefention>>()
-                    
-    member this.Lemmatize (text:string) : list<WordDefention> =
+                             
+    let call (action: ('T -> 'R)) (obj:'T) : 'R =
+        action obj
+
+    member this.Lemmatize (text:string) : WordDefention[] =
         lock lockObject (fun () -> getProcessOutput text mystemProc reader)
             |> JArray.Parse
-            |> cast
+            |> call (fun a -> a.ToObject<list<WordDefention>>())
+            |> List.toArray
+
