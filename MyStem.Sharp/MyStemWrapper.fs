@@ -4,6 +4,7 @@ open System.Diagnostics
 open System.Text
 open System.IO
 open Newtonsoft.Json.Linq
+open System.Text.RegularExpressions
 
 type Defention(gr:string,lex:string) =
     member this.Gr = gr
@@ -20,6 +21,7 @@ type WordDefention(text, analysis:Defention[]) =
 type Lemmatizer (path: string) = 
     
     let lockObject = ref 4
+    let cleanRegex = new Regex(@"[^\w\d-]", RegexOptions.Compiled ||| RegexOptions.IgnoreCase);
 
     let createStartInfo path =
         let startInfo = new ProcessStartInfo()
@@ -42,7 +44,7 @@ type Lemmatizer (path: string) =
     let mystemProc = createProcess path
     let reader = new StreamReader(mystemProc.StandardOutput.BaseStream, Encoding.UTF8)
 
-    let getProcessOutput text (proc:Process) (reader:StreamReader) = 
+    let getProcessOutput (proc:Process) (reader:StreamReader) text = 
         let buffer = Encoding.UTF8.GetBytes(text + "\r\n")
         proc.StandardInput.BaseStream.Write(buffer,0,buffer.Length)
         proc.StandardInput.BaseStream.Flush()
@@ -52,7 +54,8 @@ type Lemmatizer (path: string) =
         action obj
 
     member this.Lemmatize (text:string) : WordDefention[] =
-        lock lockObject (fun () -> getProcessOutput text mystemProc reader)
+        cleanRegex.Replace(text, " ")
+            |> lock lockObject (fun () -> getProcessOutput mystemProc reader)
             |> JArray.Parse
             |> call (fun a -> a.ToObject<list<WordDefention>>())
             |> List.toArray
