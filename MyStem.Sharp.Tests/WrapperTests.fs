@@ -13,6 +13,7 @@ type Tests() =
     member  this.SimpleMyStemTest() =
         let wrapper = new Lemmatizer(myStemPath) 
         let lemmas = wrapper.Lemmatize "Съешь ещё этих мягких булочек и выпей чаю"
+        Assert.AreEqual("съедать",lemmas.[0].GetText())
         ()
     
     [<Test>]
@@ -27,9 +28,15 @@ type Tests() =
         )
 
         let lemmas = wrapper.Lemmatize "Облака - белокрылые лошадки"
-        
         t1.Wait()
-
         Assert.AreEqual("облако",lemmas.[0].GetText())
-       
+        ()
+
+    [<Test>]
+    member  this.``Don't throw NRE when Null Aanalysis``() =
+        let wrapper = new Lemmatizer(myStemPath) 
+        let text = wrapper.Lemmatize ("Облака - белокрылые лошадки") 
+                |> Seq.map (fun a -> a.GetText()) 
+                |> String.concat " "
+        Assert.AreEqual ("облако  -  белокрылый   лошадка \n", text)
         ()

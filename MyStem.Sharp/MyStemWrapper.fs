@@ -6,16 +6,16 @@ open System.IO
 open Newtonsoft.Json.Linq
 
 type Defention(gr:string,lex:string) =
-    member this.gr = gr
-    member this.lex = lex
+    member this.Gr = gr
+    member this.Lex = lex
 
 type WordDefention(text, analysis:Defention[]) = 
-    member this.text = text
-    member this.analysis = analysis
+    member this.Text = text
+    member this.Analysis = if isNull analysis then Array.empty else analysis
     member this.GetText() : string = 
-        match this.analysis |> Array.length with
-        | 0 -> this.text
-        | _ -> analysis.[0].lex
+        match this.Analysis |> Array.length with
+        | 0 -> this.Text
+        | _ -> analysis.[0].Lex
 
 type Lemmatizer (path: string) = 
     
