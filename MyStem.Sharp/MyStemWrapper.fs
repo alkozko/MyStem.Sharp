@@ -54,7 +54,7 @@ type Lemmatizer (path: string) =
         action obj
 
     member this.Lemmatize (text:string) : WordDefention[] =
-        cleanRegex.Replace(text, " ")
+        cleanRegex.Replace((if isNull(text) then "" else text), " ")
             |> lock lockObject (fun () -> getProcessOutput mystemProc reader)
             |> JArray.Parse
             |> call (fun a -> a.ToObject<list<WordDefention>>())
