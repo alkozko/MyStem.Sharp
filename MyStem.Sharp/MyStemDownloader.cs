@@ -9,6 +9,7 @@ namespace MyStem.Sharp
     {
         private readonly Uri _url;
         private readonly string _baseFolder;
+        private static readonly object Lockobj  = new object();
 
         public MyStemDownloader(string url = @"http://download.cdn.yandex.net/mystem/mystem-3.0-win7-64bit.zip")
         {
@@ -18,23 +19,26 @@ namespace MyStem.Sharp
 
         public string GetLocalPath()
         {
-            var directory = Path.Combine(_baseFolder, "mystem");
-            if (Directory.Exists(directory) == false)
-                Directory.CreateDirectory(directory);
-
-            var myStemExePath = Path.Combine(directory, "mystem.exe");
-            if (File.Exists(myStemExePath))
-                return myStemExePath;
-
-            var myStemZipPath = Path.Combine(directory, "mystem.zip");
-            using (var webClient = new WebClient())
+            lock (Lockobj)
             {
-                webClient.DownloadFile(_url, myStemZipPath);
-                ZipFile.ExtractToDirectory(myStemZipPath, directory);
-                File.Delete(myStemZipPath);
-            }
+                var directory = Path.Combine(_baseFolder, "mystem");
+                if (Directory.Exists(directory) == false)
+                    Directory.CreateDirectory(directory);
 
-            return myStemExePath;
+                var myStemExePath = Path.Combine(directory, "mystem.exe");
+                if (File.Exists(myStemExePath))
+                    return myStemExePath;
+
+                var myStemZipPath = Path.Combine(directory, "mystem.zip");
+                using (var webClient = new WebClient())
+                {
+                    webClient.DownloadFile(_url, myStemZipPath);
+                    ZipFile.ExtractToDirectory(myStemZipPath, directory);
+                    File.Delete(myStemZipPath);
+                }
+
+                return "";
+            }
         }
     }
 }
