@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MyStem.Sharp
 {
-    public class Lemmatizer
+    public class Lemmatizer: IDisposable
     {
         private readonly Regex _cleanRegex;
         private static readonly object LockObject = new object();
@@ -65,6 +66,12 @@ namespace MyStem.Sharp
             var process = new Process {StartInfo = CreateStartInfo(path)};
             process.Start();
             return process;
+        }
+
+        public void Dispose()
+        {
+            _myStemProcess?.Dispose();
+            _streamReader?.Dispose();
         }
     }
 }
