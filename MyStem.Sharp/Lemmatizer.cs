@@ -29,6 +29,13 @@ namespace MyStem.Sharp
                 .ToArray();
         }
 
+        public string LemmatizeText(string text)
+        {
+            var lemmatized = Lemmatize(text);
+
+            return string.Join(" ", lemmatized.Select(x => x.GetText()));
+        }
+
         private ProcessStartInfo CreateStartInfo(string path)
         {
             return new ProcessStartInfo
