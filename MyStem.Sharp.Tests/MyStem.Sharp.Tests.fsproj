@@ -10,9 +10,10 @@
     <RootNamespace>MyStem.Sharp.Tests</RootNamespace>
     <AssemblyName>MyStem.Sharp.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
+    <TargetFSharpCoreVersion>4.4.1.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Name>MyStem.Sharp.Tests</Name>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +51,6 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="WrapperTests.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
@@ -68,9 +68,9 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyStem.Sharp\MyStem.Sharp.fsproj">
+    <ProjectReference Include="..\MyStem.Sharp\MyStem.Sharp.csproj">
       <Name>MyStem.Sharp</Name>
-      <Project>{70301556-c581-410a-a6ea-b38f4d2adf25}</Project>
+      <Project>{6f594ffd-92c0-4590-91cc-33e732ce9ae9}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

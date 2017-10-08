@@ -3,11 +3,11 @@
 open NUnit.Framework
 open MyStem.Sharp
 open System.Threading.Tasks
-open MyStem.Sharp.Wrapper
+open System
 
 [<TestFixture>]
 type Tests() = 
-    let myStemPath = @"E:\Systems\alkozko\Downloads\mystem\mystem.exe"
+    let myStemPath = MyStemDownloader().GetLocalPath()
 
     [<Test>]
     member  this.SimpleMyStemTest() =
@@ -38,5 +38,14 @@ type Tests() =
         let text = wrapper.Lemmatize ("Облака - белокрылые лошадки") 
                 |> Seq.map (fun a -> a.GetText()) 
                 |> String.concat " "
-        Assert.AreEqual ("облако  -  белокрылый   лошадка \n", text)
+        Assert.AreEqual ("облако  -  белокрылый   лошадка ", text)
+        ()
+
+    [<Test>]
+    member  this.``SuperTest``() =
+        let wrapper = new Lemmatizer(myStemPath) 
+        let text = wrapper.Lemmatize ("Программа mystem производит морфологический анализ текста на русском языке") 
+                |> Seq.map (fun a -> if a.Analysis.Length > 0 then (sprintf "%s {%s}" a.Analysis.[0].Lex a.Analysis.[0].Gr) else a.GetText()) 
+                |> String.concat " "
+        Console.WriteLine text
         ()
